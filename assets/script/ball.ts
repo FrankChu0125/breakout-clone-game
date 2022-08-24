@@ -18,6 +18,21 @@ export default class Ball extends cc.Component {
             cc.director.loadScene('GameOver');
 
         }
+    }
 
+
+    // 只在两个碰撞体结束接触时被调用一次
+    onEndContact(contact, selfCollider, otherCollider) {
+        console.log('结束接触时被调用一次', otherCollider.tag);
+    }
+
+    // 每次将要处理碰撞体接触逻辑时被调用
+    onPreSolve(contact, selfCollider, otherCollider) {
+        console.log('处理碰撞体接触逻辑时被调用', otherCollider.tag);
+    }
+
+    // 每次处理完碰撞体接触逻辑时被调用
+    onPostSolve(contact, selfCollider, otherCollider) {
+        console.log(' 每次处理完碰撞体接触逻辑时被调用', otherCollider.tag);
     }
 }

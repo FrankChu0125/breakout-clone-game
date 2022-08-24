@@ -9,7 +9,7 @@ export default class Hinder extends cc.Component {
     onLoad() {
         // 旋轉
         // this.node.rotation = Math.random() * 180
-        this.hinderLabel.node.rotation = -this.node.rotation
+        this.hinderLabel.node.angle = -this.node.angle
         let random = Math.floor(1 + Math.random() * 5)
         this.hinderLabel.string = '' + random
     }

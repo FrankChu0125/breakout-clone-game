@@ -18,23 +18,24 @@ export default class GameLogic extends cc.Component {
     @property({ type: cc.Label, tooltip: "得分" })
     count: cc.Label = null
 
-    @property({ type: cc.Integer, tooltip: "磚塊的X" })
+    // @property({ type: cc.Integer, tooltip: "磚塊的X" })
     brickX: number = -280
 
-    @property({ type: cc.Integer, tooltip: "磚塊的Y" })
-    brickY: number = 400
+    // @property({ type: cc.Integer, tooltip: "磚塊的Y" })
+    brickY: number = 0
 
-    @property({ type: cc.Integer, tooltip: "磚塊的寬" })
+    // @property({ type: cc.Integer, tooltip: "磚塊的寬" })
     brickWidth: number = 60
 
-    @property({ type: cc.Integer, tooltip: "縱向間距" })
-    brickPadding: number = 100
+    // @property({ type: cc.Integer, tooltip: "縱向間距" })
+    brickPadding: number = 30
 
     onLoad() {
         let self = this;
         this.count.node.active = true;
         // 開啟碰撞
         cc.director.getPhysicsManager().enabled = true;
+        console.log('開啟碰撞', cc.director.getPhysicsManager().enabled)
         /** 點擊控制桿 */
         self.node.on(cc.Node.EventType.TOUCH_MOVE, (event) => {
             // 將點擊後的座標轉為節點坐標系的座標
@@ -52,15 +53,16 @@ export default class GameLogic extends cc.Component {
             }
         }, self)
 
-        //自动生成砖块
+        //生成磚塊
         self.schedule(function () {
             self.createbrick();
 
         }, 0.2, 1);
-        //生成障碍物
+
+        //生成障礙物
         self.schedule(function () {
             self.createRinder();
-        }, 10, 2);
+        }, 1);
     }
 
     /** 產生磚塊 */
@@ -73,7 +75,7 @@ export default class GameLogic extends cc.Component {
                 let brick_y = this.brickY;
                 newPrefab.setPosition(cc.v2(brick_x, brick_y));
             }
-            
+
             this.brickY -= this.brickPadding;
         }
     }
@@ -82,17 +84,26 @@ export default class GameLogic extends cc.Component {
     createRinder() {
         let newHinder = cc.instantiate(this.hinder);
         this.node.addChild(newHinder);
-        newHinder.rotation = Math.random() * 90;
+        newHinder.angle = Math.random() * 90;
 
-        let barmin = -this.node.width / 2 + newHinder.width / 2;//最小坐标
-        let barmax = -barmin;
-        let bar_x = Math.random() * (barmax - barmin + 1) + barmin;
-        newHinder.setPosition(cc.v2(bar_x, -50));
-        if (newHinder.x > barmax) {
-            newHinder.x = barmax;
+        // 最小寬度
+        let minWidth = -this.node.width / 2 + newHinder.width / 2;
+        let maxWidth = -minWidth;
+        // 最大高度
+        let minHeight = -300;
+        let maxHeight = 145;
+        let hinderX = Math.random() * (maxWidth - minWidth + 1) + minWidth;
+        console.log('minHeight:', minHeight);
+        console.log('maxHeight:', maxHeight);
+
+        let hinderY = Math.random() * (maxHeight + minHeight);
+        console.log('hinderY::', hinderY);
+        newHinder.setPosition(cc.v2(hinderX, hinderY + Math.random() * 200));
+        if (newHinder.x > maxWidth) {
+            newHinder.x = maxWidth;
         }
-        if (newHinder.x < barmin) {
-            newHinder.x = barmin;
+        if (newHinder.x < minWidth) {
+            newHinder.x = minWidth;
         }
     }
 
